@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor de PDFs</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .box {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            position: relative;
+        }
+
+        .box:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .box h2 {
+            color: rgb(195, 151, 186);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .box {
+                width: 90%;
+            }
+        }
+
+        .strawberry {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: url('fresa.png') no-repeat center/cover;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 2s ease-out;
+        }
+
+          /* Estilos del footer */
+        footer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+            align-items: center;
+        }
+
+        footer a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px; /* Tamaño del enlace */
+            height: 30px; 
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro transparente */
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+        }
+
+        footer a:hover {
+            background-color: #007bff; /* Fondo azul en hover */
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más intensa en hover */
+        }
+
+        footer a img {
+            width: 20px; /* Tamaño de la imagen */
+            height: 20px;
+            border-radius: 50%; /* Imagen redonda */
+            transition: transform 0.3s ease;
+        }
+
+        footer a:hover img {
+            transform: scale(1.1); /* Efecto de escala en hover */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box" onmouseover="spawnStrawberries(event)" onclick="window.open('Menu bionicos.pdf', '_blank')">
+            <h2>MENU BIONICOS</h2>
+        </div>
+        <div class="box" onmouseover="spawnStrawberries(event)" onclick="window.open('Menu fresas con crema.pdf', '_blank')">
+            <h2>MENUS FRESAS & CREAM</h2>
+        </div>
+        <div class="box" onmouseover="spawnStrawberries(event)" onclick="window.open('MENU maltedas.pdf', '_blank')">
+            <h2>MENU MALTEADAS</h2>
+        </div>
+    </div>
+
+    <script>
+        function spawnStrawberries(event) {
+            const box = event.target;
+            const boxRect = box.getBoundingClientRect();
+
+            for (let i = 0; i < 5; i++) {
+                let fresa = document.createElement("div");
+                fresa.classList.add("strawberry");
+                document.body.appendChild(fresa);
+
+                let side = Math.floor(Math.random() * 4);
+                let posX, posY;
+
+                switch (side) {
+                    case 0: // Arriba
+                        posX = boxRect.left + Math.random() * boxRect.width;
+                        posY = boxRect.top;
+                        break;
+                    case 1: // Abajo
+                        posX = boxRect.left + Math.random() * boxRect.width;
+                        posY = boxRect.bottom;
+                        break;
+                    case 2: // Izquierda
+                        posX = boxRect.left;
+                        posY = boxRect.top + Math.random() * boxRect.height;
+                        break;
+                    case 3: // Derecha
+                        posX = boxRect.right;
+                        posY = boxRect.top + Math.random() * boxRect.height;
+                        break;
+                }
+
+                fresa.style.left = `${posX}px`;
+                fresa.style.top = `${posY}px`;
+
+                setTimeout(() => {
+                    
+
+                    let offsetX = (posX - window.innerWidth / 2) * 1.5;
+                    let offsetY = (posY - window.innerHeight / 2) * 1.5;
+                    let angle = Math.atan2(offsetY, offsetX) * (180 / Math.PI);
+
+                    fresa.style.opacity = "1";
+                    fresa.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg)`;
+                }, 100);
+
+                setTimeout(() => {
+                    fresa.style.opacity = "0";
+                    setTimeout(() => fresa.remove(), 1000);
+                }, 2000);
+            }
+        }
+    </script>
+
+
+
+<footer>
+    <!-- <a href="https://www.facebook.com" target="_blank">
+        <img src="./socialmedia/facebook.png" alt="Facebook">
+    </a>
+    Enlace con imagen de Instagram -->
+    <!-- <a href="https://www.instagram.com" target="_blank">
+        <img src="./socialmedia/instagram.png" alt="Instagram">
+    </a>
+
+    <a href="https://www.whatsapp.com" target="_blank">
+        <img src="./socialmedia//social.png" alt="Whatsapp">
+    </a> -->
+</footer>
+
+</body>
+
+</html>
